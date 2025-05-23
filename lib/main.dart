@@ -1,5 +1,5 @@
+import 'package:dealy_meal/screens/meal_screen.dart';
 import 'package:flutter/material.dart';
-import 'screens/welcom_screen.dart';
 import 'screens/auth_screen.dart'; // 👈 Import the AuthScreen
 
 void main() {
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const WelcomeScreen(),
+      home: const MealScreen(),
       routes: {
         AuthScreen.routeName: (ctx) => const AuthScreen(), // 👈 Add route here
       },
