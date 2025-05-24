@@ -1,4 +1,4 @@
-# 🍽️ Meal Planner
+#  Meal Planner
 
 
 A comprehensive meal planning application built with Flutter that helps users organize their daily meals, discover recipes, and track eating habits.
