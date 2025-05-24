@@ -154,7 +154,7 @@ class _MealScreenState extends State<MealScreen> {
                           children: [
                             const CircleAvatar(
                               backgroundImage: NetworkImage(
-                                'https://i.pravatar.cc/150?img=3',
+                                'https://i.pravatar.cc/150?img=4',
                               ),
                             ),
                             const SizedBox(width: 10),
