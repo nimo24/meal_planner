@@ -1,5 +1,5 @@
+import 'package:dealy_meal/screens/meal_screen.dart';
 import 'package:flutter/material.dart';
-import 'screens/welcom_screen.dart';
 import 'screens/auth_screen.dart'; // 👈 Import the AuthScreen
 import 'screens/home_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
