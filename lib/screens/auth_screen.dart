@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'profile_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   static const routeName = '/auth';
@@ -15,6 +17,8 @@ class _AuthScreenState extends State<AuthScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,14 +28,13 @@ class _AuthScreenState extends State<AuthScreen> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                   'assets/images/waffol.jpg'), // 🔁 Your image here
+                image: AssetImage('assets/images/waffol.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
 
-          // Semi-transparent overlay for blur effect
+          // Overlay
           Container(
             color: Colors.black.withOpacity(0.3),
           ),
@@ -41,12 +44,10 @@ class _AuthScreenState extends State<AuthScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 40),
-                  // Logo
                   const CircleAvatar(
                     radius: 40,
-                    backgroundColor: Colors.white,
-                    backgroundImage:
-                        AssetImage('assets/images/logo.png'), // 🔁 Your logo
+                    backgroundColor: Color(0xFFB71C1C),
+                    backgroundImage: AssetImage('assets/images/Paella.png'),
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -60,7 +61,6 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   const SizedBox(height: 30),
 
-                  // Glass container
                   Container(
                     padding: const EdgeInsets.all(24),
                     margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -70,14 +70,12 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     child: Column(
                       children: [
-                        // Toggle between login/signup
+                        // Tabs
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
-                              onPressed: () {
-                                setState(() => isLogin = true);
-                              },
+                              onPressed: () => setState(() => isLogin = true),
                               style: TextButton.styleFrom(
                                 foregroundColor:
                                     isLogin ? Colors.black : Colors.white,
@@ -91,15 +89,12 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                             const SizedBox(width: 10),
                             TextButton(
-                              onPressed: () {
-                                setState(() => isLogin = false);
-                              },
+                              onPressed: () => setState(() => isLogin = false),
                               style: TextButton.styleFrom(
                                 foregroundColor:
                                     !isLogin ? Colors.black : Colors.white,
-                                backgroundColor: !isLogin
-                                    ? Colors.white
-                                    : Colors.transparent,
+                                backgroundColor:
+                                    !isLogin ? Colors.white : Colors.transparent,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -110,7 +105,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         const SizedBox(height: 20),
 
-                        // Conditional Name field
                         if (!isLogin)
                           TextField(
                             controller: _nameController,
@@ -134,24 +128,20 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         const SizedBox(height: 24),
 
-                        // Action button
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(50),
-                            backgroundColor: const Color.fromARGB(221, 72, 70, 70),
-                          ),
-                          onPressed: () {
-                            if (isLogin) {
-                              // TODO: handle login
-                            } else {
-                              // TODO: handle sign up
-                            }
-                          },
-                          child: Text(
-                            isLogin ? "Login" : "Sign Up",
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
+                        _isLoading
+                            ? const CircularProgressIndicator()
+                            : ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size.fromHeight(50),
+                                  backgroundColor:
+                                      const Color.fromARGB(221, 72, 70, 70),
+                                ),
+                                onPressed: handleAuthAction,
+                                child: Text(
+                                  isLogin ? "Login" : "Sign Up",
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
 
                         const SizedBox(height: 12),
                         TextButton(
@@ -192,5 +182,65 @@ class _AuthScreenState extends State<AuthScreen> {
       fillColor: Colors.white.withOpacity(0.1),
       filled: true,
     );
+  }
+
+  Future<void> handleAuthAction() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final name = _nameController.text.trim();
+    final supabase = Supabase.instance.client;
+
+    setState(() => _isLoading = true);
+
+    try {
+      if (isLogin) {
+        final response = await supabase.auth.signInWithPassword(
+          email: email,
+          password: password,
+        );
+        if (response.user != null) {
+          _navigateToProfile();
+        }
+      } else {
+        final response = await supabase.auth.signUp(
+          email: email,
+          password: password,
+          data: {'name': name},
+        );
+        if (response.user != null /* && response.user!.emailConfirmedAt != null */) {
+          _navigateToProfile();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Check your email to verify account.")),
+          );
+        }
+      }
+    } on AuthException catch (e) {
+      print("AuthException: ${e.message}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Unexpected error occurred.")),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _navigateToProfile() {
+    // Clear fields before navigating
+    _nameController.clear();
+    _emailController.clear();
+    _passwordController.clear();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const ProfilePage()),
+    );
+
+    // OR, if using named routes:
+    // Navigator.pushReplacementNamed(context, ProfilePage.routeName);
   }
 }
