@@ -1,39 +1,38 @@
 # 🍽️ Meal Planner
 
-![App Screenshot](screenshots/app_preview.png) <!-- Add your screenshot here -->
 
 A comprehensive meal planning application built with Flutter that helps users organize their daily meals, discover recipes, and track eating habits.
 
-## ✨ Features
+##  Features
 
-- 🔐 User Sign Up & Login using Supabase Auth
-- 📧 Email/password authentication
-- 🖼️ Stylish UI with background images
-- 👤 Personalized greeting with user metadata (name)
-- 🔁 Toggle between Login and Sign Up views
-- 🔓 Secure logout with session clearing
+-  User Sign Up & Login using Supabase Auth
+-  Email/password authentication
+-  Stylish UI with background images
+-  Personalized greeting with user metadata (name)
+-  Toggle between Login and Sign Up views
+-  Secure logout with session clearing
 
 
-### 🔐 Authentication
+###  Authentication
 - User Sign Up & Login using Supabase Auth
 - Email/password authentication
 - Secure logout with session clearing
 - Personalized greeting with user metadata (name)
 
-### 🍽️ Meal Management
+###  Meal Management
 - Browse meals by categories (All, Entree, Main, Dessert)
 - Star and save favorite meals
 - Schedule meals to specific days/times (Breakfast, Lunch, Dinner)
 - View past meal selections
 - Export menus as PDF/image
 
-### 🎨 UI/UX
+###  UI/UX
 - Modern, stylish interface
 - Animated transitions
 - Responsive design for all devices
 - Background images for visual appeal
 
-## 📱 Screens
+##  Screens
 
 | Screen | Description | Key Features |
 |--------|-------------|--------------|
@@ -46,7 +45,7 @@ A comprehensive meal planning application built with Flutter that helps users or
 | Profile | Account management | Edit profile, change password |
 | Meal Details | Full meal info | Ingredients, instructions, add to plan |
 
-## 🛠️ Technical Stack
+##  Technical Stack
 
 **Built With:**
 - Flutter 3.x
@@ -61,7 +60,7 @@ A comprehensive meal planning application built with Flutter that helps users or
 - `cached_network_image`: Image loading
 - `flutter_riverpod`: State management (optional)
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Flutter SDK (latest stable version)
