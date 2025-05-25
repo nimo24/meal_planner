@@ -2,10 +2,14 @@ import 'dart:convert';
 
 import 'package:dealy_meal/models/ScheduledMeal.dart';
 import 'package:dealy_meal/models/comment_model.dart';
+import 'package:dealy_meal/screens/auth_screen.dart';
 import 'package:dealy_meal/screens/main_navigation.dart';
+import 'package:dealy_meal/screens/profile_screen.dart';
+import 'package:dealy_meal/screens/welcom_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'models/meal_model.dart';
 import 'screens/explore_page.dart';
@@ -23,6 +27,10 @@ void main() async {
   await Hive.openBox<ScheduledMeal>('scheduledMeals');
 
   await loadMealsFromJson();
+   await Supabase.initialize(
+    url: 'https://jdzdmisekvnwpbstkqvl.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkemRtaXNla3Zud3Bic3RrcXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NDE5NjgsImV4cCI6MjA2MzUxNzk2OH0.Ao4F615ZCWlrFUSsR0MTEoY4znlhFAtDtS_Ny7bIyy4',
+  );
 
   runApp(MyApp());
 }
@@ -39,7 +47,11 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat',
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: const MainNavigation(),
+     home: const WelcomeScreen(),
+      routes: {
+        AuthScreen.routeName: (ctx) => const AuthScreen(), // 👈 Add route here
+       
+      },
     );
   }
 }

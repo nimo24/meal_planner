@@ -1,5 +1,5 @@
-// calendar_popup.dart
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPopup extends StatefulWidget {
@@ -10,6 +10,7 @@ class CalendarPopup extends StatefulWidget {
   @override
   _CalendarPopupState createState() => _CalendarPopupState();
 }
+
 class _CalendarPopupState extends State<CalendarPopup> {
   DateTime _selectedDay = DateTime.now();
   String _selectedMeal = 'Breakfast';
@@ -17,6 +18,7 @@ class _CalendarPopupState extends State<CalendarPopup> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white, // Set popup background to white
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -41,42 +43,66 @@ class _CalendarPopupState extends State<CalendarPopup> {
             ),
             const SizedBox(height: 16),
 
-            // Meal selection buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: ['Breakfast', 'Lunch', 'Dinner'].map((meal) {
-                final isSelected = _selectedMeal == meal;
-                return ElevatedButton(
-                  onPressed: () {
-                    setState(() => _selectedMeal = meal);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isSelected ? Colors.teal : Colors.grey[300],
-                    foregroundColor: isSelected ? Colors.white : Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+            // Scrollable meal selection buttons
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: ['Breakfast', 'Lunch', 'Dinner'].map((meal) {
+                  final isSelected = _selectedMeal == meal;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: OutlinedButton(
+                      onPressed: () {
+                        setState(() => _selectedMeal = meal);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor:
+                            isSelected ? Color.fromARGB(255, 219, 234, 254) : Color.fromARGB(255, 219, 234, 254),
+                        foregroundColor:
+                            isSelected ? Colors.red[800] : Colors.black,
+                        side: BorderSide(
+                          color: isSelected ? Colors.red : const Color.fromARGB(0, 158, 158, 158),
+                          width: 2,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                       child: Text(
+                        meal,
+                        style: GoogleFonts.poppins(fontSize: 14,),
+                      ),
                     ),
-                    elevation: isSelected ? 3 : 0,
-                  ),
-                  child: Text(meal),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
 
             const SizedBox(height: 16),
 
             // Validate button
-            ElevatedButton.icon(
-              onPressed: () {
-                widget.onValidate(_selectedDay, _selectedMeal);
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.check),
-              label: const Text("Validate"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                foregroundColor: Colors.white,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      widget.onValidate(_selectedDay, _selectedMeal);
+                      Navigator.of(context).pop();
+                    },
+                   
+                    label: const Text("Validate"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 202, 24, 60),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

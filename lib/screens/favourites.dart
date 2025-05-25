@@ -2,6 +2,7 @@ import 'package:dealy_meal/components/meal_card.dart';
 import 'package:dealy_meal/screens/mea_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 
 import 'dart:convert';
 
@@ -25,18 +26,25 @@ class _FavouritePageState extends State<FavouritePage> {
     loadFavourites();
   }
 
-  Future<void> loadFavourites() async {
-    final String jsonString = await rootBundle.loadString('assets/data/meals.json');
-    final List<dynamic> jsonResponse = json.decode(jsonString);
+ Future<void> loadFavourites() async {
+  final favBox = await Hive.openBox<Meal>('favourites'); // open Hive box
 
-    setState(() {
-      // Only keep meals where isFavourite == true
-      favouriteMeals = jsonResponse
-          .map((meal) => Meal.fromJson(meal))
-          .where((meal) => meal.isFavourite)
-          .toList();
-    });
-  }
+  final String jsonString = await rootBundle.loadString('assets/data/meals.json');
+  final List<dynamic> jsonResponse = json.decode(jsonString);
+
+  // Map and override isFavourite from Hive box if present
+  final allMeals = jsonResponse.map((mealJson) {
+    final meal = Meal.fromJson(mealJson);
+    if (favBox.containsKey(meal.id)) {
+      meal.isFavourite = favBox.get(meal.id)!.isFavourite;
+    }
+    return meal;
+  }).toList();
+
+  setState(() {
+    favouriteMeals = allMeals.where((meal) => meal.isFavourite).toList();
+  });
+}
 
   @override
   Widget build(BuildContext context) {

@@ -24,18 +24,19 @@ class _MealCardState extends State<MealCard> {
   }
 
   void toggleFavourite() {
-    setState(() {
-      isFavourite = !isFavourite;
-      widget.meal.isFavourite = isFavourite;
-    });
+  setState(() {
+    isFavourite = !isFavourite;          // Toggle true <-> false
+    widget.meal.isFavourite = isFavourite; // Update the meal model too
+  });
 
-    // Save or remove from Hive box
-    if (isFavourite) {
-      favouritesBox.put(widget.meal.id, widget.meal);
-    } else {
-      favouritesBox.delete(widget.meal.id);
-    }
+  // Save or remove from Hive box
+  if (isFavourite) {
+    favouritesBox.put(widget.meal.id, widget.meal);
+  } else {
+    favouritesBox.delete(widget.meal.id);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,15 +84,20 @@ class _MealCardState extends State<MealCard> {
                 ),
                 const SizedBox(height: 0),
                 IconButton(
-                  icon: Icon(
-                    isFavourite ? Icons.star_rounded : Icons.star_border_rounded,
-                    color: isFavourite
-                        ? const Color.fromARGB(255, 187, 37, 42)
-                        : const Color.fromARGB(255, 202, 191, 152),
-                    size: 20,
-                  ),
-                  onPressed: toggleFavourite,
-                ),
+  iconSize: 24,
+  icon: Image.asset(
+    isFavourite
+        ? 'assets/icons/star.png'  // show filled star if true
+        : 'assets/icons/starr.png', // outline star if false
+    color: isFavourite
+        ? const Color.fromARGB(255, 187, 37, 42)  // red color if favourite
+        : const Color.fromARGB(255, 202, 191, 152), // lighter if not
+    height: 24,
+    width: 24,
+  ),
+  onPressed: toggleFavourite,
+),
+
               ],
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:dealy_meal/components/header_text.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';  // <-- import here
 import 'auth_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -12,18 +13,23 @@ class WelcomeScreen extends StatelessWidget {
       body: Stack(
         children: [
           const HeaderText(),
+
+          // Positioned text/button at bottom
           Positioned(
             bottom: 100,
             left: 20,
             right: 20,
             child: Column(
               children: [
-                const Text(
+                Text(
                   'Meal planning made simple!\n'
                   'Organize your meals, generate plans,\n'
                   'and save them with ease. Let\'s get started!',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.white),
+                  style: GoogleFonts.lustria(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
@@ -36,11 +42,11 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, AuthScreen.routeName); // 👈 go to AuthScreen
+                    Navigator.pushNamed(context, AuthScreen.routeName);
                   },
-                  child: const Text(
+                  child: Text(
                     'Get Started!',
-                    style: TextStyle(
+                    style: GoogleFonts.lustria(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -48,6 +54,18 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+
+          // "YumPlan" text centered in the middle (adjust placement if needed)
+          Center(
+            child: Text(
+              "YumPlan",
+              style: GoogleFonts.licorice(
+                fontSize: 48,
+                color: Colors.white,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ],
