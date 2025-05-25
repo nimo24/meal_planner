@@ -1,0 +1,103 @@
+[
+    {
+      "id": "meal_001",
+      "title": "Avocado Toast",
+      "description": "Crunchy toast topped with smashed avocado.",
+      "detailedDescription": "A healthy and simple dish featuring crispy toasted bread generously layered with seasoned, mashed avocado. Garnished with a sprinkle of sea salt, chili flakes, and a drizzle of olive oil.",
+      "isFavourite": false,
+      "isHistory": false,
+      "photo": "assets/images/1.png",
+      "type": "entree"
+    },
+    {
+      "id": "meal_002",
+      "title": "Chocolate Cake",
+      "description": "Rich chocolate cake with dark ganache.",
+      "detailedDescription": "A decadent and moist chocolate cake made with premium cocoa and layered with a silky dark chocolate ganache. Perfect for chocolate lovers seeking a luxurious dessert experience.",
+      "isFavourite": true,
+      "isHistory": false,
+      "photo": "assets/images/2.png",
+      "type": "dessert"
+    },
+    {
+      "id": "meal_003",
+      "title": "Caesar Salad",
+      "description": "Classic salad with romaine, croutons, and creamy dressing.",
+      "detailedDescription": "Fresh romaine lettuce tossed with crunchy garlic croutons, grated parmesan, and our house-made creamy Caesar dressing. A timeless favorite, perfect as a light meal or side.",
+      "isFavourite": false,
+      "isHistory": false,
+      "photo": "assets/images/3.png",
+      "type": "entree"
+    },
+    {
+      "id": "meal_004",
+      "title": "Spaghetti",
+      "description": "Spaghetti pasta with hearty meat sauce.",
+      "detailedDescription": "Al dente spaghetti served with a rich, slow-cooked meat sauce made from ground beef, tomatoes, and Italian herbs. A comforting and satisfying classic.",
+      "isFavourite": false,
+      "isHistory": false,
+      "photo": "assets/images/4.png",
+      "type": "plat"
+    },
+    {
+      "id": "meal_005",
+      "title": "Grilled Chicken",
+      "description": "Juicy grilled chicken breast with herbs.",
+      "detailedDescription": "Tender chicken breast marinated in a blend of herbs and spices, grilled to perfection. Served with your choice of sides for a wholesome meal.",
+      "isFavourite": false,
+      "isHistory": false,
+      "photo": "assets/images/5.png",
+      "type": "plat"
+    },
+    {
+      "id": "meal_006",
+      "title": "Fruit Parfait",
+      "description": "Layered yogurt with fruits and granola.",
+      "detailedDescription": "A refreshing treat with creamy yogurt layered between fresh seasonal fruits and crunchy granola. A perfect mix of textures and flavors for a light dessert or breakfast.",
+      "isFavourite": true,
+      "isHistory": false,
+      "photo": "assets/images/6.png",
+      "type": "dessert"
+    },
+    {
+      "id": "meal_007",
+      "title": "Mushroom Soup",
+      "description": "Creamy mushroom soup with garlic bread.",
+      "detailedDescription": "A comforting bowl of creamy mushroom soup made with sautéed mushrooms, onions, and herbs. Served with a side of warm garlic bread for dipping.",
+      "isFavourite": false,
+      "isHistory": false,
+      "photo": "assets/images/7.png",
+      "type": "entree"
+    },
+    {
+      "id": "meal_008",
+      "title": "Beef Steak",
+      "description": "Grilled beef steak with peppercorn sauce.",
+      "detailedDescription": "Premium beef steak grilled to your liking, served with a rich peppercorn sauce and accompanied by seasonal vegetables or mashed potatoes.",
+      "isFavourite": false,
+      "isHistory": false,
+      "photo": "assets/images/8.png",
+      "type": "plat"
+    },
+    {
+      "id": "meal_009",
+      "title": "Tiramisu",
+      "description": "Classic Italian dessert with coffee and mascarpone.",
+      "detailedDescription": "Layers of espresso-soaked ladyfingers, mascarpone cheese, and cocoa powder create this luscious Italian dessert. Light, creamy, and perfectly balanced.",
+      "isFavourite": true,
+      "isHistory": false,
+      "photo": "assets/images/9.png",
+      "type": "dessert"
+    },
+    {
+      "id": "meal_010",
+      "title": "Tomato Bruschetta",
+      "description": "Toasted bread topped with tomato and basil.",
+      "detailedDescription": "Crispy slices of toasted baguette topped with a fresh mix of diced tomatoes, basil, garlic, and olive oil. A bright and flavorful appetizer.",
+      "isFavourite": false,
+      "isHistory": false,
+      "photo": "assets/images/10.png",
+      "type": "entree"
+    }
+  ]
+  
