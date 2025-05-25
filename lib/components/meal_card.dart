@@ -14,26 +14,29 @@ class MealCard extends StatefulWidget {
 
 class _MealCardState extends State<MealCard> {
   late bool isFavourite;
+  late Box<Meal> favouritesBox;
 
   @override
   void initState() {
     super.initState();
     isFavourite = widget.meal.isFavourite;
+    favouritesBox = Hive.box<Meal>('favourites');
   }
 
-  void toggleFavourite() async {
-    final box = Hive.box('favourites');
-    setState(() {
-      isFavourite = !isFavourite;
-      widget.meal.isFavourite = isFavourite;
-    });
+  void toggleFavourite() {
+  setState(() {
+    isFavourite = !isFavourite;          // Toggle true <-> false
+    widget.meal.isFavourite = isFavourite; // Update the meal model too
+  });
 
-    if (isFavourite) {
-      box.put(widget.meal.id, widget.meal);
-    } else {
-      box.delete(widget.meal.id);
-    }
+  // Save or remove from Hive box
+  if (isFavourite) {
+    favouritesBox.put(widget.meal.id, widget.meal);
+  } else {
+    favouritesBox.delete(widget.meal.id);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,7 @@ class _MealCardState extends State<MealCard> {
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 228, 229, 223),
               borderRadius: BorderRadius.circular(20),
-               boxShadow: const [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   offset: Offset(0, 4),
@@ -58,50 +61,53 @@ class _MealCardState extends State<MealCard> {
               ],
             ),
             child: Column(
-  children: [
-    const Spacer(), // pushes content downward
-    Text(
-      widget.meal.title,
-      textAlign: TextAlign.center,
-     style: GoogleFonts.elMessiri(
-    fontSize: 14,
-    fontWeight: FontWeight.bold,
-  ),
-    ),
-    const SizedBox(height: 3),
-    Text(
-      widget.meal.description,
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      textAlign: TextAlign.center,
-      
-       style: GoogleFonts.jura(
-    fontSize: 12,
-        color: Color.fromARGB(255, 126, 109, 109),
-  ),
-    ),
-    const SizedBox(height: 0),
-    IconButton(
-  icon: Icon(
-    isFavourite ? Icons.star_rounded : Icons.star_border_rounded,
-    color: isFavourite ? Color.fromARGB(255, 187, 37, 42) : const Color.fromARGB(255, 202, 191, 152),
-    size: 20,
+              children: [
+                const Spacer(),
+                Text(
+                  widget.meal.title,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.elMessiri(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  widget.meal.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.jura(
+                    fontSize: 12,
+                    color: Color.fromARGB(255, 126, 109, 109),
+                  ),
+                ),
+                const SizedBox(height: 0),
+                IconButton(
+  iconSize: 24,
+  icon: Image.asset(
+    isFavourite
+        ? 'assets/icons/star.png'  // show filled star if true
+        : 'assets/icons/starr.png', // outline star if false
+    color: isFavourite
+        ? const Color.fromARGB(255, 187, 37, 42)  // red color if favourite
+        : const Color.fromARGB(255, 202, 191, 152), // lighter if not
+    height: 24,
+    width: 24,
   ),
   onPressed: toggleFavourite,
 ),
 
-  ],
-),
-
+              ],
+            ),
           ),
 
-          // Floating image (slightly lower)
+          // Floating image
           Positioned(
-            top: 20, // Lowered from 0 to 20
+            top: 20,
             left: 24,
             right: 24,
-            
-               child: Container(
+            child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 boxShadow: const [

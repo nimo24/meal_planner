@@ -191,19 +191,7 @@ style: GoogleFonts.patrickHand(
         ],
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
-        ],
-        currentIndex: 0,
-        onTap: (index) {
-        },
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-      ),
+     
     );
   }
 }

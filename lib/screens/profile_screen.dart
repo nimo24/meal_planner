@@ -1,122 +1,176 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'auth_screen.dart'; // Make sure this matches your file path
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
 
-  Future<void> _signOut(BuildContext context) async {
-    await Supabase.instance.client.auth.signOut();
+class _ProfilePageState extends State<ProfilePage> {
+  final Color mainColor = Color(0xFFE55063);
+  final Color bgColor = Color(0xFFF9FAFC);
 
-    // Navigate to login screen
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const AuthScreen()),
-    );
+  // Displayed user info
+  String displayedName = "Loading...";
+  String displayedEmail = "Loading...";
 
-    // OR using named routes:
-    // Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+  // Editable fields
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      setState(() {
+        displayedEmail = user.email ?? "";
+        displayedName = user.userMetadata?['name'] ?? "User";
+      });
+    }
+  }
+
+  Future<void> _updateUserData() async {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) return;
+
+    try {
+      // Update name in user_metadata
+      if (nameController.text.isNotEmpty) {
+        await Supabase.instance.client.auth.updateUser(
+          UserAttributes(data: {'name': nameController.text}),
+        );
+        displayedName = nameController.text;
+      }
+
+      // Update email
+      if (emailController.text.isNotEmpty) {
+        await Supabase.instance.client.auth.updateUser(
+          UserAttributes(email: emailController.text),
+        );
+        displayedEmail = emailController.text;
+      }
+
+      // Update password
+      if (passwordController.text.isNotEmpty) {
+        await Supabase.instance.client.auth.updateUser(
+          UserAttributes(password: passwordController.text),
+        );
+      }
+
+      // Refresh UI
+      setState(() {});
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Profile updated successfully")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 249, 247, 247),
-      body: Center(
-        child: Card(
-          elevation: 8,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      backgroundColor: bgColor,
+   
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: mainColor,
+                child: CircleAvatar(
+                  radius: 47,
+                  backgroundImage: AssetImage('assets/profile.jpg'),
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(displayedName, style: TextStyle(fontSize: 22, color: mainColor, letterSpacing: 2)),
+              Text(displayedEmail, style: TextStyle(color: Colors.grey[600])),
+              SizedBox(height: 30),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    buildEditableField(Icons.account_box, "Update Name", nameController),
+                    SizedBox(height: 15),
+                    buildEditableField(Icons.mail_outline, "Update Email", emailController),
+                    SizedBox(height: 15),
+                    buildEditableField(Icons.lock_outline, "Update Password", passwordController, isPassword: true),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 30),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black87,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+                ),
+                onPressed: _updateUserData,
+                child: Text("Save changes", style: TextStyle(fontSize: 16)),
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildEditableField(IconData icon, String label, TextEditingController controller, {bool isPassword = false}) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
           child: Container(
-            width: 400,
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: mainColor,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Row(
               children: [
-                const CircleAvatar(
-                  radius: 48,
-                  backgroundColor: Colors.grey,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'John Doe',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFCA183B),
-                  ),
-                ),
-                const Text(
-                  'johndoe@example.com',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 24),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Update Name',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFCA183B)),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFCA183B)),
+                Icon(icon, color: Colors.white),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: controller,
+                    obscureText: isPassword,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: label,
+                      hintStyle: TextStyle(color: Colors.white70),
+                      border: InputBorder.none,
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Update Email',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFCA183B)),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFCA183B)),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: 'Change Password',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFCA183B)),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFCA183B)),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFCA183B),
-                    ),
-                    onPressed: () {
-                      // TODO: Implement save changes
-                    },
-                    child: const Text('Save Changes'),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFFCA183B),
-                      side: const BorderSide(color: Color(0xFFCA183B)),
-                    ),
-                    onPressed: () => _signOut(context),
-                    child: const Text('Logout'),
-                  ),
-                )
               ],
             ),
           ),
         ),
-      ),
+        SizedBox(width: 10),
+        Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+          ),
+          child: Icon(Icons.mode_edit_outline_outlined, color: Colors.indigo, size: 20),
+        ),
+      ],
     );
   }
 }
